@@ -50,33 +50,18 @@ ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs${LIBRARY_PATH:+:${LIBRARY_PATH}}
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
 
-###########################################################################################
-# STAGE 2: Install dependencies
-###########################################################################################
 FROM nvidia_base as vlsp
 
-# Install cmake
-WORKDIR /opt/cmake
-
-RUN echo "\nDownloading and building CMake...\n" && \
-    apt update && apt install -y qtbase5-dev libncurses5-dev && \
-    wget https://github.com/Kitware/CMake/releases/download/v3.14.3/cmake-3.14.3.tar.gz && \
-    tar xvzf cmake-3.14.3.tar.gz && cd /opt/cmake/cmake-3.14.3 && \
-    ./configure --qt-gui && \
-    ./bootstrap && make -j $(nproc) && make install -j $(nproc)
-
-# Install necessary packages
-RUN pip3 uninstall -y numpy enum34 && \
-    wget https://github.com/numpy/numpy/archive/v1.16.3.zip -O numpy.zip && \
-    unzip numpy.zip && cd numpy-1.16.3 && \
-
 ###########################################################################################
-# STAGE 3: Install other packages
+# STAGE 2: Install packages
 ###########################################################################################
 # Todo:
 # Checkout enviroment 
 # copy requirement and install 
 WORKDIR /opt/packages
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
+    python3 get-pip.py
+
 RUN pip3 install torchvision==0.5.0 && torch==1.4.0 && \
     pip3 install https://github.com/trungtv/vi_spacy/raw/master/packages/vi_spacy_model-0.2.1/dist/vi_spacy_model-0.2.1.tar.gz && \
     pip install pyvi
@@ -85,7 +70,7 @@ WORKDIR /vlsp
 RUN pip3 install -r requirements.txt
 
 ###########################################################################################
-# STAGE 4: Default commands
+# STAGE 3: Default commands
 ###########################################################################################
 CMD ["/bin/bash"]
 
