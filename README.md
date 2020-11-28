@@ -1,19 +1,34 @@
 ## VLSP-2020
 ## Thorlab-C
-Member:
+Members:
 ** Tuyen(L)
 ** Tranh
 ** Thanh
 
 This to save my work at home about NPL
-
 Try to using VN in spacy lab
-## Setup
+## Build
+Docker image 
+```
+docker build -t ThorLab-C-NMT .
+```
+
+## Setup for develop
+* Setup an enviroment
 * vi_spacy model 
-* Setup enviroment
+```
+bash build.sh
+```
 * Reprocessing data
+This step without reprocessed_data folder
+```
+python3 ./vlsp_data/collect_full.py
+```
+
 * Training 
+: Run Transfomer.ipynb file
+
 ## Todo:
-* Training with custom data
-* Build split and batch function 
-* Check dictionary 
+* Check dictionary
+* Evaluation  
+* Testing 

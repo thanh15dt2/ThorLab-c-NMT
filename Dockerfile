@@ -66,7 +66,6 @@ RUN echo "\nDownloading and building CMake...\n" && \
     ./bootstrap && make -j $(nproc) && make install -j $(nproc)
 
 # Install necessary packages
-
 RUN pip3 uninstall -y numpy enum34 && \
     wget https://github.com/numpy/numpy/archive/v1.16.3.zip -O numpy.zip && \
     unzip numpy.zip && cd numpy-1.16.3 && \
@@ -78,12 +77,15 @@ RUN pip3 uninstall -y numpy enum34 && \
 # Checkout enviroment 
 # copy requirement and install 
 WORKDIR /opt/packages
-RUN pip3 install torchvision==0.5.0 && torch==1.4.0
-
+RUN pip3 install torchvision==0.5.0 && torch==1.4.0 && \
+    pip3 install https://github.com/trungtv/vi_spacy/raw/master/packages/vi_spacy_model-0.2.1/dist/vi_spacy_model-0.2.1.tar.gz && \
+    pip install pyvi
 COPY ["./", "/vlsp"]
+WORKDIR /vlsp
 RUN pip3 install -r requirements.txt
+
 ###########################################################################################
 # STAGE 4: Default commands
 ###########################################################################################
-CMD ["/bin/bash", "/swing/boot.sh"]
+CMD ["/bin/bash"]
 
